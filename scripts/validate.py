@@ -15,6 +15,7 @@ from config import RESERVED_DIRS, ROOT, ROOT_FILES, SLUG_RE, load_config
 
 TEXT_EXTS = {".html", ".htm", ".md", ".txt", ".json", ".csv", ".js", ".svg", ".xml"}
 DATA_EXTS = {".csv", ".xlsx", ".xls", ".json"}
+FONT_EXTS = {".ttf", ".otf", ".woff", ".woff2"}
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})")
 # 8 to 11 digit runs: likely ID numbers (cédulas) or phone numbers.
 LONG_DIGITS_RE = re.compile(r"(?<![\d.#-])\d{8,11}(?![\d.])")
@@ -129,6 +130,8 @@ def check_files(config):
             ext = path.suffix.lower()
             if ext in DATA_EXTS and path.name != "project.json":
                 report("warning", path, "Raw data file on a public site. Confirm it holds no personal data.")
+            if ext in FONT_EXTS:
+                report("warning", path, "Font file on a public site, where anyone can download it. Confirm its license allows that, or use the brand fonts from Google Fonts via /_assets/ver.css.")
             if ext in TEXT_EXTS:
                 scan_text(path, allowed_domains)
 

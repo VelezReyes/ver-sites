@@ -6,7 +6,8 @@ The GitHub organization is assumed to be `VelezReyes`. If it's different, change
 
 ## 1. The source repo (`ver-sites`)
 
-1. Create the repo `VelezReyes/ver-sites` and push this scaffold to `main`. It can be private: only the published site repos need to be public.
+1. Create the repo `VelezReyes/ver-sites` and push this scaffold to `main`. **It must be private.** Everything in it is visible to whoever can see the repo, including pull requests that haven't been reviewed yet, so a public `ver-sites` makes every proposed page public before anyone approves it. Only the `site-*` repos are public.
+   - Rulesets on private repos need GitHub Team or higher. On the Free plan they exist but aren't enforced. Verified nonprofits can get GitHub Team free through GitHub for Nonprofits.
 2. Create the teams named in `.github/CODEOWNERS` (or rename them there to match your existing teams). Give each team **Write** access to `ver-sites`.
 3. Add a ruleset for `main` (Settings → Rules → Rulesets → New branch ruleset):
    - Target: the default branch.

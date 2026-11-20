@@ -25,11 +25,11 @@ jobs:
       matrix: ${{ steps.select.outputs.matrix }}
       any: ${{ steps.select.outputs.any }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -50,11 +50,11 @@ jobs:
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     name: Publish ${{ matrix.area }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0   # full history so the landing page can show "updated" dates
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -66,7 +66,7 @@ jobs:
 
       - name: Get a token for ${{ matrix.repo }}
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.PUBLISHER_APP_ID }}
           private-key: ${{ secrets.PUBLISHER_APP_PRIVATE_KEY }}

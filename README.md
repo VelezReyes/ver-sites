@@ -14,7 +14,7 @@ Public web pages for every VélezReyes+ area. Each area has its own address:
 
 Each project is a folder inside its area, and its folder name becomes its address: `education/becatech/` is published at `education.velezreyesmas.org/becatech/`.
 
-> **Everything here is public.** Anyone on the internet can open these pages, including ones hidden from the project list. Never publish names, emails, ID numbers, phone numbers or any other personal data, even about a single person. Pages with sensitive information belong in the restricted system, not here.
+> **Everything here is public once it's merged.** Anyone on the internet can open these pages, including ones hidden from the project list. Never publish names, emails, ID numbers, phone numbers or any other personal data, even about a single person. Counts of fewer than 5 people with a sensitive characteristic (disability, health, ethnicity, migration status, victimization and similar) for a school, community or other identifiable place count as personal data too: show them as "<5". Pages with sensitive information belong in the restricted system, not here.
 
 ## Publish a page
 
@@ -59,6 +59,7 @@ Every area site serves the brand stylesheet at `/_assets/ver.css` and the header
 | An email address (other than `@velezreyesmas.org`) | Blocks the merge |
 | A long number that could be an ID or phone number | Warning for the reviewer |
 | A raw data file (`.csv`, `.xlsx`, `.json`) | Warning for the reviewer |
+| A font file (`.ttf`, `.otf`, `.woff`, `.woff2`) | Warning for the reviewer: most font licenses don't allow publishing the font files |
 
 The checks catch common mistakes, not every kind of personal data. The reviewer is still responsible for reading the page before approving it.
 
