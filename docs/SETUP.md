@@ -57,6 +57,9 @@ Repeat this for each area. Education is the example.
    - Source: **Deploy from a branch**, branch `main`, folder `/ (root)`.
    - Custom domain should show `education.velezreyesmas.org` (it comes from the `CNAME` file the workflow writes). If it's empty, type it in and save.
    - Wait for the DNS check to pass and the certificate to be issued (usually minutes, sometimes up to an hour), then tick **Enforce HTTPS**.
+   - If the site still shows GitHub's generic 404 a few minutes later, Pages hasn't built yet
+     (this happens when files were pushed before Pages was turned on). Start a build with:
+     `gh api -X POST repos/VelezReyes/site-<area>/pages/builds`
 6. Open `https://education.velezreyesmas.org/`. You should see the area page.
 
 To add a brand-new area later: add it to `areas.json` (with `"live": false`), add a folder for it with a `.gitkeep`, add its line to `CODEOWNERS`, then follow the checklist above.
