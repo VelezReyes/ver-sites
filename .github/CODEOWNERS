@@ -1,0 +1,21 @@
+# Who must approve changes. The last matching line wins.
+# Replace the team names with your real GitHub teams; each team needs write access to this repo.
+# Turn on "Require review from Code Owners" in the main branch ruleset for this to be enforced.
+
+# Default: the web admins own everything not listed below.
+*                     @VelezReyes/web-admins
+
+# Each area's leads approve their own pages.
+/education/           @VelezReyes/education-leads
+/mel/                 @VelezReyes/mel-leads
+/leadership/          @VelezReyes/leadership-leads
+/public-leadership/   @VelezReyes/public-leadership-leads
+/comms-admin/         @VelezReyes/comms-admin-leads
+/democracia/          @VelezReyes/democracia-leads
+/aprendo/             @VelezReyes/aprendo-leads
+
+# Shared pieces affect every site, so only admins approve them.
+/areas.json           @VelezReyes/web-admins
+/_template/           @VelezReyes/web-admins
+/scripts/             @VelezReyes/web-admins
+/.github/             @VelezReyes/web-admins
