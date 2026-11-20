@@ -24,10 +24,10 @@ The publish workflow uses a GitHub App to push into the `site-*` repos. An App i
    - Webhook: uncheck **Active**.
    - Repository permissions: **Contents → Read and write**. Leave everything else at "No access".
    - Where can this app be installed: **Only on this account**.
-2. After creating it, note the **App ID** and click **Generate a private key** (a `.pem` file downloads).
+2. After creating it, note the **Client ID** (it starts with `Iv`) and click **Generate a private key** (a `.pem` file downloads).
 3. Install the app on the organization and choose **Only select repositories**. You'll add each `site-*` repo here as you create them (step 5).
 4. In `ver-sites` → Settings → Secrets and variables → Actions:
-   - Variables tab: `PUBLISHER_APP_ID` = the App ID.
+   - Variables tab: `PUBLISHER_APP_CLIENT_ID` = the Client ID.
    - Secrets tab: `PUBLISHER_APP_PRIVATE_KEY` = the full contents of the `.pem` file. Then delete the downloaded file.
 
 ## 3. Verify the domain on GitHub
