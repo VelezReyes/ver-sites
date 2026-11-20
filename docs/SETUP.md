@@ -49,7 +49,7 @@ Verifying the parent domain covers its subdomains, so you do this once.
 
 Repeat this for each area. Education is the example.
 
-1. **Create the site repo.** New repository `VelezReyes/site-education`, **public**, completely empty (no README). Give only the web admins access. Nobody edits it by hand; the workflow overwrites it on every publish.
+1. **Create the site repo.** New repository `VelezReyes/site-education`, **public**, completely empty (no README). Give only the web admins access. Nobody edits it by hand: every publish replaces its contents with a single fresh commit and force-pushes it, so the repo never keeps old versions of pages. Don't add branch protection or rulesets that block force pushes on `site-*` repos. If your organization has rulesets that apply to all repos, add the `ver-sites publisher` app to their bypass list.
 2. **Let the app push to it.** Organization settings → GitHub Apps → `ver-sites publisher` → Configure → add `site-education` to the selected repositories.
 3. **Add the DNS record in Cloudflare.** Type `CNAME`, Name `education`, Target `velezreyes.github.io`, Proxy status **DNS only**.
 4. **Turn the area on.** In a PR to `ver-sites`, set `"live": true` for the area in `areas.json`, then merge. The **Publish areas** workflow builds the site and pushes it to `site-education`.
