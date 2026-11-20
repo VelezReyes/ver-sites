@@ -1,0 +1,134 @@
+/* VélezReyes+ shared web styles.
+   Served at /_assets/ver.css on every area subdomain.
+   Brand tokens follow the ver-word skill: Montserrat headings, Roboto body,
+   green #27CF77, purple #A62BFF, ink #444746, surface #EFEFE4.
+   Yellow #F3FF00 appears only on dark backgrounds. */
+
+:root {
+  --ver-green: #27CF77;
+  --ver-purple: #A62BFF;
+  --ver-yellow: #F3FF00;
+
+  --bg: #FFFFFF;
+  --surface: #EFEFE4;
+  --ink: #444746;
+  --ink-strong: #1F2120;
+  --muted: #6B6E6C;
+  --rule: #E2E1D6;
+  --link: #1155CC;
+  --heading: #1A9E57;   /* darker green for large text contrast on white */
+  --focus: #A62BFF;
+  --logo-filter: none;
+
+  --font-head: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --measure: 72ch;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0A0A0A;
+    --surface: #1A1B1A;
+    --ink: #D9DAD5;
+    --ink-strong: #FFFFFF;
+    --muted: #9C9F9B;
+    --rule: #2C2E2C;
+    --link: #8AB4F8;
+    --heading: #27CF77;
+    --focus: #F3FF00;
+    --logo-filter: invert(1);
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; height: auto; }
+
+a { color: var(--link); text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+
+h1, h2, h3 { font-family: var(--font-head); color: var(--ink-strong); line-height: 1.15; margin: 0 0 0.5em; }
+h1 { color: var(--heading); }
+h2 { font-size: 1.5rem; color: var(--ver-purple); }
+h3 { font-size: 1.15rem; }
+@media (prefers-color-scheme: dark) { h2 { color: #C98BFF; } }
+
+/* Page frame */
+.ver-wrap { max-width: calc(var(--measure) + 4rem); margin: 0 auto; padding: 0 2rem; }
+
+.ver-banner { padding: 1.75rem 0 1.25rem; border-bottom: 1px solid var(--rule); }
+.ver-banner img { display: block; width: min(100%, 640px); filter: var(--logo-filter); }
+
+.ver-footer {
+  margin-top: 5rem;
+  padding: 1.5rem 0 2.5rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* Area landing page */
+.ver-area-head { padding: clamp(3rem, 9vw, 6.5rem) 0 2.5rem; }
+.ver-area-head h1 {
+  font-size: clamp(2.75rem, 8vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.35em;
+}
+.ver-area-head p { max-width: 52ch; margin: 0; font-size: 1.15rem; color: var(--muted); }
+
+.ver-projects { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink-strong); }
+.ver-projects li { border-bottom: 1px solid var(--rule); }
+.ver-projects a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 2rem;
+  padding: 1.35rem 0.75rem;
+  margin: 0 -0.75rem;
+  color: inherit;
+  text-decoration: none;
+}
+.ver-projects a:hover { background: var(--surface); }
+.ver-projects .title { font-family: var(--font-head); font-weight: 700; font-size: 1.2rem; color: var(--ink-strong); }
+.ver-projects a:hover .title { text-decoration: underline; text-underline-offset: 0.18em; }
+.ver-projects .desc { grid-column: 1; color: var(--ink); max-width: 60ch; }
+.ver-projects time { grid-column: 2; grid-row: 1; color: var(--muted); font-size: 0.875rem; white-space: nowrap; align-self: baseline; }
+
+.ver-empty { padding: 2rem 0; color: var(--muted); }
+
+@media (max-width: 560px) {
+  .ver-wrap { padding: 0 1.25rem; }
+  .ver-projects a { grid-template-columns: 1fr; }
+  .ver-projects time { grid-column: 1; grid-row: auto; }
+}
+
+/* Project pages (starter template) */
+.ver-back { display: inline-block; margin: 1.5rem 0 0; font-size: 0.95rem; }
+.ver-article { max-width: var(--measure); padding: 2.5rem 0 0; }
+.ver-article h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; }
+.ver-article .lede { font-size: 1.2rem; color: var(--muted); margin-top: 0; }
+.ver-box { background: var(--surface); padding: 1.25rem 1.5rem; border-radius: 4px; margin: 1.5rem 0; }
+.ver-box > :first-child { margin-top: 0; }
+.ver-box > :last-child { margin-bottom: 0; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--font-head); font-size: 0.95rem; }
+.ver-table-scroll { overflow-x: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

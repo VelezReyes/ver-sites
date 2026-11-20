@@ -1,0 +1,17 @@
+{
+  "org": "VelezReyes",
+  "domain": "velezreyesmas.org",
+  "checks": {
+    "allowed_email_domains": ["velezreyesmas.org"],
+    "max_file_mb": 25
+  },
+  "areas": {
+    "education":         { "name": "Education",                         "live": false },
+    "mel":               { "name": "MEL",                               "live": false },
+    "leadership":        { "name": "Leadership",                        "live": false },
+    "public-leadership": { "name": "Public Leadership and Innovation",   "live": false },
+    "comms-admin":       { "name": "Comms and Admin",                   "live": false },
+    "democracia":        { "name": "Democracia+",                       "live": false },
+    "aprendo":           { "name": "Aprendo+",                          "live": false }
+  }
+}
