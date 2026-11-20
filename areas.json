@@ -6,7 +6,7 @@
     "max_file_mb": 25
   },
   "areas": {
-    "education":         { "name": "Education",                         "live": false },
+    "education":         { "name": "Education",                         "live": true },
     "mel":               { "name": "MEL",                               "live": false },
     "leadership":        { "name": "Leadership",                        "live": false },
     "public-leadership": { "name": "Public Leadership and Innovation",   "live": false },
