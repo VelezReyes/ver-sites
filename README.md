@@ -21,7 +21,7 @@ Each project is a folder inside its area, and its folder name becomes its addres
 1. Create a folder in your area: `<area>/<project-name>/`.
    - Use lowercase letters, numbers and hyphens only: `scholar-outcomes`, not `Scholar Outcomes` or `resultados-becas-2026 (final)`. No accents.
 2. Put the page in it as `index.html`. Images and other files the page uses go in the same folder.
-3. Optionally add a `project.json` to control how the project appears on the area's list:
+3. Add a `project.json`. It's required, and it must name the page's **owner**: the one person accountable for it, who reviewers contact with questions and who gets asked to update or remove it. If you're publishing someone else's work, they're usually the owner. The other fields control how the project appears on the area's list:
    ```json
    {
      "title": "Scholar outcomes dashboard",
@@ -31,7 +31,7 @@ Each project is a folder inside its area, and its folder name becomes its addres
      "hidden": false
    }
    ```
-   Without it, the list uses the page's `<title>` and `<meta name="description">`, and the date of the last change.
+   `owner` must be one person's `@velezreyesmas.org` email. Without a title or description, the list uses the page's `<title>` and `<meta name="description">`; without `updated`, the date of the last change.
 4. Open a pull request. Automatic checks run first, then one of your area's leads approves it.
 5. Once merged, the page is live in a couple of minutes.
 
@@ -40,7 +40,7 @@ Starting from scratch? Copy `_template/project-starter/`. It already uses the br
 ## Update or unpublish
 
 - **Update:** change the files in the project folder and open a pull request.
-- **Unpublish:** delete the project folder in a pull request. It disappears from the site when merged.
+- **Unpublish:** delete the project folder in a pull request. It disappears from the site when merged. If a page exposes personal data or anything else that shouldn't be public, it's an urgent removal: follow [docs/UNPUBLISH.md](docs/UNPUBLISH.md).
 - **Hide from the list:** set `"hidden": true` in `project.json`. The page stays reachable by its address; it just isn't listed.
 
 ## Shared styles
@@ -53,6 +53,7 @@ Every area site serves the brand stylesheet at `/_assets/ver.css` and the header
 |---|---|
 | Folder or file name with capitals, spaces or accents | Blocks the merge |
 | Project folder without `index.html` | Blocks the merge |
+| Missing `project.json`, or no valid `owner` email in it | Blocks the merge |
 | Files outside an area/project folder | Blocks the merge |
 | File over 25 MB | Blocks the merge |
 | An email address (other than `@velezreyesmas.org`) | Blocks the merge |
@@ -63,4 +64,4 @@ The checks catch common mistakes, not every kind of personal data. The reviewer 
 
 ## For admins
 
-Setup, the publisher app, Cloudflare DNS and adding new areas are covered in [docs/SETUP.md](docs/SETUP.md).
+Setup, the publisher app, Cloudflare DNS and adding new areas are covered in [docs/SETUP.md](docs/SETUP.md). Taking pages down, including urgent removals, is in [docs/UNPUBLISH.md](docs/UNPUBLISH.md).

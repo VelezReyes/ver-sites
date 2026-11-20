@@ -22,6 +22,10 @@ LONG_DIGITS_RE = re.compile(r"(?<![\d.#-])\d{8,11}(?![\d.])")
 FILE_TLDS = {"png", "jpg", "jpeg", "gif", "svg", "webp", "avif", "css", "js", "woff", "woff2"}
 MAX_WARNINGS_PER_FILE = 5
 
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+ORG_DOMAINS = load_config()["checks"].get("allowed_email_domains", ["velezreyesmas.org"])
+OWNER_RE = re.compile(r"^[A-Za-z0-9._%+-]+@(" + "|".join(re.escape(d) for d in ORG_DOMAINS) + r")$", re.I)
+
 IN_ACTIONS = os.environ.get("GITHUB_ACTIONS") == "true"
 errors, warnings = [], []
 
@@ -75,14 +79,37 @@ def check_area(area_dir):
             report("error", entry, "Project folders can't start with '_' (reserved for shared assets).")
         if not (entry / "index.html").is_file():
             report("error", entry, "Every project needs an index.html.")
-        meta = entry / "project.json"
-        if meta.is_file():
-            try:
-                data = json.loads(meta.read_text(encoding="utf-8"))
-                if not isinstance(data, dict):
-                    raise ValueError("must be a JSON object")
-            except (ValueError, json.JSONDecodeError) as e:
-                report("error", meta, f"project.json isn't valid JSON: {e}")
+        check_project_json(entry)
+
+
+def check_project_json(project_dir):
+    """Every project needs a project.json naming an accountable owner."""
+    meta = project_dir / "project.json"
+    if not meta.is_file():
+        report("error", project_dir, "Missing project.json. Every project needs one with at least an \"owner\" email.")
+        return
+    try:
+        data = json.loads(meta.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError("must be a JSON object")
+    except (ValueError, json.JSONDecodeError) as e:
+        report("error", meta, f"project.json isn't valid JSON: {e}")
+        return
+
+    owner = data.get("owner")
+    if not owner or not isinstance(owner, str):
+        report("error", meta, "Missing \"owner\": the email of the person responsible for this page.")
+    elif not OWNER_RE.match(owner.strip()):
+        report("error", meta, f"\"owner\" must be one person's email at {' or '.join(ORG_DOMAINS)} (got '{owner}').")
+
+    updated = data.get("updated")
+    if updated is not None and not (isinstance(updated, str) and DATE_RE.match(updated)):
+        report("error", meta, "\"updated\" must be a date written as YYYY-MM-DD.")
+    if "hidden" in data and not isinstance(data["hidden"], bool):
+        report("error", meta, "\"hidden\" must be true or false (no quotes).")
+    for field in ("title", "description"):
+        if field in data and not isinstance(data[field], str):
+            report("error", meta, f"\"{field}\" must be text.")
 
 
 def check_files(config):

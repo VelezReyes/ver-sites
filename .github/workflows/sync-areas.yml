@@ -82,24 +82,26 @@ jobs:
           DOMAIN: ${{ matrix.domain }}
         run: |
           set -euo pipefail
-          git clone --quiet "https://x-access-token:${TOKEN}@github.com/${OWNER}/${REPO}.git" site
-          cd site
-          # Work on main whatever the repo's default branch is; start it fresh if it doesn't exist yet.
-          if git ls-remote --exit-code --heads origin main >/dev/null; then
-            git checkout --quiet -B main origin/main
-          else
-            git checkout --quiet --orphan main
+          # The site repo is a build output and is public, so it keeps no history:
+          # each publish replaces it with one fresh commit. That way, an unpublished
+          # page can't be recovered from an older commit. The full history lives in
+          # ver-sites, which is private.
+          mkdir site && cd site
+          git init --quiet
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${OWNER}/${REPO}.git"
+          # What's live now, if anything, so an unchanged build doesn't push.
+          old_tree=""
+          if git fetch --quiet --depth 1 origin main 2>/dev/null; then
+            old_tree=$(git rev-parse 'FETCH_HEAD^{tree}')
           fi
-          # Replace everything except git metadata with the fresh build.
-          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           cp -a ../_build/site/. .
           git add -A
-          if git diff --cached --quiet; then
+          if [ "$(git write-tree)" = "$old_tree" ]; then
             echo "No changes for ${AREA}."
             exit 0
           fi
           git config user.name "ver-sites publisher"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit --quiet -m "Publish ${AREA} from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
-          git push --quiet origin main
+          git push --quiet --force origin HEAD:main
           echo "### Published https://${DOMAIN}/" >> "$GITHUB_STEP_SUMMARY"
