@@ -18,7 +18,7 @@ When in doubt, treat it as urgent. Taking a page down early costs little; leavin
 
 ## What removal does
 
-Merging a PR that deletes `<area>/<slug>/` republishes that area. The publish workflow rebuilds the area's `site-*` repo from scratch as a single commit, so the page's files are removed from GitHub entirely, not only from the live site. The full record stays in `ver-sites`, which is private.
+Merging a PR that deletes `<area>/<slug>/` republishes that area. The publish workflow rebuilds the area's `site-*` repo from scratch as a single commit, so the page's files are removed from GitHub entirely, not only from the live site. The full record stays in `ver-sites`, which must be private (see SETUP.md). If it's ever public, its history and pull requests expose everything that was removed.
 
 ## Routine removal
 
