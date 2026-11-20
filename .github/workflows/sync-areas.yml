@@ -1,0 +1,105 @@
+name: Publish areas
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      area:
+        description: 'Area to republish (folder name), or "all"'
+        required: true
+        default: all
+
+# One publish at a time, in order, so two merges can't race on the same site repo.
+concurrency:
+  group: publish-areas
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      any: ${{ steps.select.outputs.any }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Select areas to publish
+        id: select
+        env:
+          BASE: ${{ github.event.before }}
+          HEAD: ${{ github.sha }}
+          AREA: ${{ inputs.area }}
+        run: python scripts/changed_areas.py --base "$BASE" --head "$HEAD" --area "$AREA"
+
+  publish:
+    needs: plan
+    if: needs.plan.outputs.any == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    name: Publish ${{ matrix.area }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so the landing page can show "updated" dates
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate
+        run: python scripts/validate.py
+
+      - name: Build ${{ matrix.area }}
+        run: python scripts/build_area.py "${{ matrix.area }}" "_build/site"
+
+      - name: Get a token for ${{ matrix.repo }}
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.PUBLISHER_APP_ID }}
+          private-key: ${{ secrets.PUBLISHER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ matrix.repo }}
+
+      - name: Push to ${{ matrix.repo }}
+        env:
+          TOKEN: ${{ steps.app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ matrix.repo }}
+          AREA: ${{ matrix.area }}
+          DOMAIN: ${{ matrix.domain }}
+        run: |
+          set -euo pipefail
+          git clone --quiet "https://x-access-token:${TOKEN}@github.com/${OWNER}/${REPO}.git" site
+          cd site
+          # Work on main whatever the repo's default branch is; start it fresh if it doesn't exist yet.
+          if git ls-remote --exit-code --heads origin main >/dev/null; then
+            git checkout --quiet -B main origin/main
+          else
+            git checkout --quiet --orphan main
+          fi
+          # Replace everything except git metadata with the fresh build.
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a ../_build/site/. .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes for ${AREA}."
+            exit 0
+          fi
+          git config user.name "ver-sites publisher"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet -m "Publish ${AREA} from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+          git push --quiet origin main
+          echo "### Published https://${DOMAIN}/" >> "$GITHUB_STEP_SUMMARY"
